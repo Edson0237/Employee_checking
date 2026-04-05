@@ -1,31 +1,24 @@
 package cm.devdouanla.checkProfile_backend.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import   jakarta.persistence.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import lombok.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
-
 @NoArgsConstructor
-
 @Entity
 @Table(name = "reponse_candidat")
 public class ReponseCandidat {
+
     @Id
     @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
- private boolean reponse; // true ou false
+    private boolean reponse;
+
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
@@ -34,5 +27,7 @@ public class ReponseCandidat {
     @JoinColumn(name = "employe_id", nullable = false)
     private Employe employe;
 
-
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id", nullable = false)
+    private Evaluation evaluation;
 }

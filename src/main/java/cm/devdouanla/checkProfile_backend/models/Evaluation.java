@@ -1,62 +1,63 @@
 package cm.devdouanla.checkProfile_backend.models;
 
-import cm.devdouanla.checkProfile_backend.enums.Mention;
+
 import cm.devdouanla.checkProfile_backend.enums.StatutConformite;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "evaluation")
-public class Evaluation {
+@Table(name = "employe")
+public class Employe {
 
     @Id
     @GeneratedValue
     private UUID id;
 
     @Column(nullable = false)
+    private String nom;
 
-    private LocalDateTime date;
+    @Column(nullable = false)
+    private String prenom;
 
-    
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private LocalDate dateRecrutement;
 
     @ManyToOne
-    @JoinColumn(name = "employe_id", nullable = false)
-    private Employe employe;
+    @JoinColumn(name = "poste_id", nullable = false)
+    private Poste poste;
 
+    @OneToMany(mappedBy = "employe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Evaluation> evaluations;
 
-    @ManyToMany
-    @JoinTable(
-        name = "evaluation_test",
-        joinColumns = @JoinColumn(name = "evaluation_id"),
-        inverseJoinColumns = @JoinColumn(name = "test_id")
-    )
-    private Set<Test> tests = new HashSet<>();
-
-    public float calculerScore() {
-        // Logic to calculate score based on responses
-        return 0.0f; // Placeholder return value
-    }
-
-    public Mention getMention() {
-        // Logic to determine mention based on score
-        return Mention.INSUFFISANT; // Placeholder return value
+    public float getScoreGlobal() {
+        if (evaluations == null || evaluations.isEmpty()) return 0.0f;
+        return (float) evaluations.stream()
+                .mapToDouble(Evaluation::calculerScore)
+                .average()
+                .orElse(0.0);
     }
 
     public StatutConformite getStatut() {
-        // Logic to determine conformity status
-        return StatutConformite.NON_EVALUE; // Placeholder return value
+        float score = getScoreGlobal();
+        if (poste == null) return StatutConformite.NON_EVALUE;
+        if (score == 0) return StatutConformite.NON_EVALUE;
+        if (poste.isConforme(this)) return StatutConformite.CONFORME;
+        if (score >= poste.getScoreMin() * 0.6f) return StatutConformite.PARTIEL;
+        return StatutConformite.NON_CONFORME;
     }
 }
