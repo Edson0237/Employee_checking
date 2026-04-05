@@ -2,6 +2,7 @@ package cm.devdouanla.checkProfile_backend.dto;
 
 import cm.devdouanla.checkProfile_backend.models.Employe;
 import cm.devdouanla.checkProfile_backend.models.Question;
+import cm.devdouanla.checkProfile_backend.models.Evaluation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class ReponseCandidatDto {
     private boolean reponse;
     private Question question;
     private Employe employe;
+    private Evaluation evaluation;
 
 }

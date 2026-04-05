@@ -50,11 +50,12 @@ public class ReponseCandidatServiceImp implements ReponseCandidatService {
     public Optional<ReponseCandidatDto> findById(UUID reponseCandidatId) {
         return reponseCandidatRepository.findById(reponseCandidatId)
                 .map(reponseCandidat -> ReponseCandidatDto.builder()
-                        .id(reponseCandidat.getId())
-                        .reponse(reponseCandidat.isReponse())
-                        .question(reponseCandidat.getQuestion())
-                        .employe(reponseCandidat.getEmploye())
-                        .build());
+                    .id(reponseCandidat.getId())
+                    .reponse(reponseCandidat.isReponse())
+                    .question(reponseCandidat.getQuestion())
+                    .employe(reponseCandidat.getEmploye())
+                    .evaluation(reponseCandidat.getEvaluation())
+                    .build());
     }
 
     // ─── UPDATE ─────────────────────────────────────────────────────────────
