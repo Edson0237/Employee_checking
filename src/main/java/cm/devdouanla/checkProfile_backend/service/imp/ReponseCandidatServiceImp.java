@@ -73,7 +73,9 @@ public class ReponseCandidatServiceImp implements ReponseCandidatService {
             if (reponseCandidatDto.getEmploye() != null) {
                 existingReponseCandidatDto.setEmploye(reponseCandidatDto.getEmploye());
             }
-
+            if (reponseCandidatDto.getEvaluation() != null) {
+                existingReponseCandidatDto.setEvaluation(reponseCandidatDto.getEvaluation());
+            }
             return save(existingReponseCandidatDto);
         }
 

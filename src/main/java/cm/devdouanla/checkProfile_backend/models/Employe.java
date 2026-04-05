@@ -44,12 +44,19 @@ public class Employe {
     private List<Evaluation> evaluations;
 
     public float getScoreGlobal() {
-        // Logic to calculate the global score of the employee
-        return 0.0f; // Placeholder return value
+        if (evaluations == null || evaluations.isEmpty()) return 0.0f;
+        return (float) evaluations.stream()
+            .mapToDouble(Evaluation::calculerScore)
+            .average()
+            .orElse(0.0);
     }
 
     public StatutConformite getStatut() {
-        // Logic to determine the conformity status of the employee
-        return StatutConformite.NON_EVALUE; // Placeholder return value
+        float score = getScoreGlobal();
+        if (poste == null) return StatutConformite.NON_EVALUE;
+        if (score == 0) return StatutConformite.NON_EVALUE;
+        if (poste.isConforme(this)) return StatutConformite.CONFORME;
+        if (score >= poste.getScoreMin() * 0.6f) return StatutConformite.PARTIEL;
+        return StatutConformite.NON_CONFORME;
     }
 }
